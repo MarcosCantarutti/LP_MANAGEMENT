@@ -15,7 +15,7 @@
   </MainAuthForm>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import HeaderAuth from '@/components/HeaderAuth/HeaderAuth.vue';
 import MainAuthForm from '@/components/MainAuthForm/MainAuthForm.vue';
 import FormEdit from '@/modules/Edit/components/FormEdit/FormEdit.vue';
