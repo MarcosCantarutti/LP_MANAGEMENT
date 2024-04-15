@@ -14,7 +14,7 @@
 </template>
 <script setup>
 import { createClient } from '@supabase/supabase-js';
-import Card from '@/modules/list/components/Card/Card.vue';
+import Card from '@/modules/List/components/Card/Card.vue';
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 
