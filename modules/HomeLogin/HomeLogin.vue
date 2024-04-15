@@ -68,7 +68,7 @@ async function signIn() {
         <!-- Exibição de mensagem de erro -->
         <div v-if="errorMsg" class="text-red-500 text-sm">{{ errorMsg }}</div>
 
-        <div class="flex items-center justify-between">
+        <!-- <div class="flex items-center justify-between">
           <div class="text-sm">
             <a
               href="#"
@@ -77,7 +77,7 @@ async function signIn() {
               Esqueceu sua senha?
             </a>
           </div>
-        </div>
+        </div> -->
 
         <div>
           <button

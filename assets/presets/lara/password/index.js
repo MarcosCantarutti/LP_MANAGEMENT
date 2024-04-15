@@ -4,8 +4,7 @@ export default {
             'inline-flex relative',
             {
                 'opacity-60 select-none pointer-events-none cursor-default': props.disabled
-            },
-            { '[&>input]:pr-10': props.toggleMask }
+            }
         ]
     }),
     panel: {
@@ -57,10 +56,10 @@ export default {
         ]
     }),
     showicon: {
-        class: ['absolute top-1/2 right-3 -mt-2 z-10', 'text-surface-600 dark:text-white/70']
+        class: ['absolute top-1/2 right-3 -mt-2', 'text-surface-600 dark:text-white/70']
     },
     hideicon: {
-        class: ['absolute top-1/2 right-3 -mt-2 z-10', 'text-surface-600 dark:text-white/70']
+        class: ['absolute top-1/2 right-3 -mt-2', 'text-surface-600 dark:text-white/70']
     },
     input: {
         root: ({ props, context, parent }) => ({

@@ -3,7 +3,7 @@ export default {
         class: 'absolute flex'
     },
     button: {
-        root: ({ props, context, parent }) => ({
+        root: ({ props, context }) => ({
             class: [
                 'relative',
                 'z-20',
@@ -172,7 +172,6 @@ export default {
 
                 // Transitions
                 'transition duration-200 ease-in-out',
-                parent.state.d_visible ? 'rotate-45' : 'rotate-0',
 
                 // Misc
                 'cursor-pointer overflow-hidden select-none'

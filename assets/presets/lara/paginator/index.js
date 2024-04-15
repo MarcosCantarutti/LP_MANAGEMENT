@@ -523,11 +523,5 @@ export default {
                 'whitespace-nowrap'
             ]
         })
-    },
-    start: {
-        class: 'mr-auto'
-    },
-    end: {
-        class: 'ml-auto'
     }
 };
