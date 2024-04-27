@@ -1,90 +1,121 @@
 <template>
-  <form class="max-w-7xl mx-auto" @submit.prevent="submitForm">
+  <div v-if="loading" class="flex itens-center">
+    <ProgressSpinner />
+  </div>
+  <form v-else class="max-w-7xl mx-auto" @submit.prevent="submitForm">
     <div class="mb-4">
-      <label for="company" class="block text-gray-700">Empresa</label>
+      <div class="mb-4">
+        <label for="title" class="block text-gray-700">Título da vaga</label>
+        <input
+          v-model="formData.title"
+          type="text"
+          id="title"
+          name="title"
+          class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="modality" class="block text-gray-700">Modalidade</label>
+        <input
+          v-model="formData.modality"
+          id="modality"
+          name="modality"
+          rows="3"
+          class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
+          required
+        />
+      </div>
+      <label for="city" class="block text-gray-700">Cidade</label>
+      <input
+        v-model="formData.city"
+        type="text"
+        id="city"
+        name="city"
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
+        required
+      />
+    </div>
+    <div class="mb-4">
+      <label for="company" class="block text-gray-700"
+        >Empresa (oculto para os usuários)</label
+      >
       <input
         v-model="formData.company"
         type="text"
         id="company"
         name="company"
-        class="form-input mt-1 block w-full"
-        required
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
       />
     </div>
     <div class="mb-4">
-      <label for="job" class="block text-gray-700">Trabalho</label>
-      <input
-        v-model="formData.job"
-        type="text"
-        id="job"
-        name="job"
-        class="form-input mt-1 block w-full"
+      <label for="benefits" class="block text-gray-700">Beneficios</label>
+      <textarea
+        v-model="formData.benefits"
+        id="benefits"
+        name="benefits"
+        rows="3"
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
         required
-      />
-    </div>
-    <div class="mb-4">
-      <label for="title" class="block text-gray-700">Título</label>
-      <input
-        v-model="formData.title"
-        type="text"
-        id="title"
-        name="title"
-        class="form-input mt-1 block w-full"
-        required
-      />
+      ></textarea>
     </div>
     <div class="mb-4">
       <label for="description" class="block text-gray-700">Descrição</label>
       <textarea
-        v-model="formData.description"
+        v-model="formData.contract_type"
         id="description"
         name="description"
         rows="3"
-        class="form-textarea mt-1 block w-full"
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
         required
       ></textarea>
     </div>
     <div class="mb-4">
-      <label for="description" class="block text-gray-700"
+      <label for="responsibilities" class="block text-gray-700"
         >Responsabilidades</label
       >
       <textarea
         v-model="formData.responsibilities"
-        id="description"
-        name="description"
+        id="responsibilities"
+        name="responsibilities"
         rows="3"
-        class="form-textarea mt-1 block w-full"
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
         required
       ></textarea>
     </div>
 
     <div class="mb-4">
-      <label for="description" class="block text-gray-700">Requisitos</label>
+      <label for="requiriments" class="block text-gray-700">Requisitos</label>
       <textarea
         v-model="formData.requiriments"
-        id="description"
-        name="description"
+        id="requiriments"
+        name="requiriments"
         rows="3"
-        class="form-textarea mt-1 block w-full"
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
         required
       ></textarea>
     </div>
 
     <div class="mb-4">
-      <label for="description" class="block text-gray-700"
+      <label for="more_information" class="block text-gray-700"
         >Mais informações</label
       >
       <textarea
         v-model="formData.more_information"
-        id="description"
-        name="description"
+        id="more_information"
+        name="more_information"
         rows="3"
-        class="form-textarea mt-1 block w-full"
-        required
+        class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full"
       ></textarea>
     </div>
 
     <div class="mb-4 flex gap-2">
+      <Button
+        label="Voltar"
+        icon="pi pi-arrow-left"
+        icon-pos="left"
+        @click="handleBack"
+      />
       <Button
         type="submit"
         label="Enviar"
@@ -92,27 +123,23 @@
         icon-pos="right"
         severity="success"
       />
-      <Button
-        label="Voltar"
-        icon="pi pi-arrow-left"
-        icon-pos="left"
-        @click="handleBack"
-      />
     </div>
   </form>
 </template>
 
 <script setup>
 import { createClient } from '@supabase/supabase-js';
-
+let loading = ref(false);
 const formData = ref({
-  job: '',
+  city: '',
   company: '',
   title: '',
-  description: '',
+  contract_type: '',
   responsibilities: '',
   requiriments: '',
   more_information: '',
+  benefits: '',
+  modality: '',
 });
 
 const router = useRouter();
@@ -130,17 +157,20 @@ const handleBack = () => {
 
 const submitForm = async () => {
   try {
+    loading.value = true;
     const { data, error } = await supabase
       .from('vagas')
       .insert([
         {
-          job: formData.value.job,
+          city: formData.value.city,
           company: formData.value.company,
           title: formData.value.title,
-          description: formData.value.description,
+          contract_type: formData.value.contract_type,
           responsibilities: formData.value.responsibilities,
           requiriments: formData.value.requiriments,
           more_information: formData.value.more_information,
+          benefits: formData.value.benefits,
+          modality: formData.value.modality,
         },
       ])
       .select();
@@ -154,16 +184,20 @@ const submitForm = async () => {
         life: 3000,
       });
       // Limpar os campos do formulário após o envio bem-sucedido
-      formData.value.job = '';
+      formData.value.city = '';
       formData.value.company = '';
       formData.value.title = '';
-      formData.value.description = '';
+      formData.value.contract_type = '';
       formData.value.responsibilities = '';
       formData.value.requiriments = '';
       formData.value.more_information = '';
+      formData.value.benefits = '';
+      formData.value.modality = '';
     }
   } catch (error) {
     console.error('Erro ao enviar o formulário:', error);
+  } finally {
+    loading.value = false;
   }
 };
 </script>

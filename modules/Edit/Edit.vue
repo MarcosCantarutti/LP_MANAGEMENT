@@ -2,13 +2,13 @@
   <HeaderAuth :email="email" @logout="logout" />
   <MainAuthForm>
     <div class="flex gap-5 items-center mb-5 justify-center">
-      <h1 class="text-2xl text-center font-bold">Editar vaga</h1>
       <Button
         label="Voltar"
         icon="pi pi-arrow-left"
         icon-pos="left"
         @click="handleBack"
       />
+      <h1 class="text-2xl text-center font-bold">Editar vaga</h1>
     </div>
 
     <FormEdit :id="route.params.id" />

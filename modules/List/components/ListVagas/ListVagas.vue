@@ -1,14 +1,24 @@
 <template>
-  <div class="grid gap-3">
+  <div v-if="loading" class="flex itens-center mt-5">
+    <ProgressSpinner />
+  </div>
+
+  <div v-else class="grid gap-3">
     <Card
       class="cursor-pointer"
       v-for="vaga in listData"
       @click="editVaga(vaga.id)"
       :key="vaga.id"
-      :job="vaga.job"
-      :title="vaga.title"
+      :created_at="vaga.created_at"
+      :job="vaga.city"
       :company="vaga.company"
-      :description="vaga.description"
+      :title="vaga.title"
+      :contract_type="vaga.contract_type"
+      :responsibilities="vaga.responsibilities"
+      :requiriments="vaga.requiriments"
+      :more_information="vaga.more_information"
+      :benefits="vaga.benefits"
+      :modality="vaga.modality"
     />
   </div>
 </template>
@@ -24,6 +34,7 @@ const supabase = createClient(
 );
 
 const listData = ref([]);
+let loading = ref(false);
 
 const editVaga = (id) => {
   console.log(id);
@@ -32,6 +43,7 @@ const editVaga = (id) => {
 
 const fetchVagas = async () => {
   try {
+    loading.value = true;
     let { data: vagas, error } = await supabase
       .from('vagas')
       .select('*')
@@ -44,6 +56,8 @@ const fetchVagas = async () => {
     }
   } catch (error) {
     console.error(error);
+  } finally {
+    loading.value = false;
   }
 };
 
