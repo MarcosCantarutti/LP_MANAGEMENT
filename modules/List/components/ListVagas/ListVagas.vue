@@ -10,7 +10,7 @@
       @click="editVaga(vaga.id)"
       :key="vaga.id"
       :created_at="vaga.created_at"
-      :job="vaga.city"
+      :city="vaga.city"
       :company="vaga.company"
       :title="vaga.title"
       :contract_type="vaga.contract_type"
