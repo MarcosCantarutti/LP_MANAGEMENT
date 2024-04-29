@@ -21,6 +21,22 @@
       :modality="vaga.modality"
     />
   </div>
+  <div class="pagination flex gap-5 justify-center items-center mt-5">
+    <button
+      @click="previousPage"
+      :disabled="currentPage === 1"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-l cursor-pointer hover:bg-gray-300"
+    >
+      Anterior
+    </button>
+    <span class="px-4 py-2 text-gray-700"> Página {{ currentPage }} </span>
+    <button
+      @click="nextPage"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-r cursor-pointer hover:bg-gray-300"
+    >
+      Próxima
+    </button>
+  </div>
 </template>
 <script setup>
 import { createClient } from '@supabase/supabase-js';
@@ -33,6 +49,9 @@ const supabase = createClient(
   runtimeConfig.public.supabaseKey
 );
 
+const currentPage = ref(1);
+const itemsPerPage = 10; // Número de itens por página
+
 const listData = ref([]);
 let loading = ref(false);
 
@@ -41,13 +60,26 @@ const editVaga = (id) => {
   router.push(`/edit/${id}`);
 };
 
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    fetchVagas();
+  }
+};
+
+const nextPage = () => {
+  currentPage.value++;
+  fetchVagas();
+};
+
 const fetchVagas = async () => {
   try {
     loading.value = true;
-    let { data: vagas, error } = await supabase
+    const offset = (currentPage.value - 1) * itemsPerPage;
+    const { data: vagas, error } = await supabase
       .from('vagas')
       .select('*')
-      .range(0, 9);
+      .range(offset, offset + itemsPerPage - 1);
 
     if (error) {
       console.error('Erro ao carregar listagem', error.message);
