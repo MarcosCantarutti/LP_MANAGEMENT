@@ -7,6 +7,12 @@
   <form v-else class="max-w-7xl mx-auto" @submit.prevent="saveForm">
     <div class="mb-4">
       <div class="mb-4">
+        <p class="block">Status da vaga:
+          <span v-if="isActive" class="text-green-700 ml-1">Ativa</span>
+          <span v-else class="text-red-700 ml-1">Inativa</span>
+        </p>
+      </div>
+      <div class="mb-4">
         <label for="title" class="block text-gray-700">Título da vaga</label>
         <input
           v-model="formData.title"
@@ -120,6 +126,32 @@
         icon-pos="right"
         severity="success"
       />
+      <Button
+        v-if="isActive"
+        type="button"
+        @click="disableActiveVaga"
+        label="Desativar"
+        icon="pi pi-minus"
+        icon-pos="right"
+        severity="warning"
+      />
+      <Button
+        v-else="isActive"
+        type="button"
+        @click="disableActiveVaga"
+        label="Ativar"
+        icon="pi pi-plus"
+        icon-pos="right"
+        severity="warning"
+      />
+      <Button
+        type="button"
+        @click="deleteVaga"
+        label="Deletar"
+        icon="pi pi-trash"
+        icon-pos="right"
+        severity="danger"
+      />
     </div>
   </form>
 </template>
@@ -139,6 +171,8 @@ const formData = ref({
   benefits: '',
   modality: '',
 });
+
+let isActive = ref(false);
 
 let loading = ref(false);
 
@@ -175,6 +209,7 @@ const fetchVagasById = async (id) => {
       formData.value.benefits = data[0].benefits;
       formData.value.modality = data[0].modality;
       formData.value.created_at = data[0].created_at;
+      isActive = data[0].active;
     }
   } catch (error) {
     console.error('Erro ao enviar o formulário:', error);
@@ -218,24 +253,58 @@ const saveForm = async () => {
 };
 
 const deleteVaga = async () => {
-  try {
-    const { error } = await supabase
-      .from('vagas')
-      .delete()
-      .eq('id', route.params.id);
-    if (error) {
-      console.error('Erro ao deletar o formulário: ', error.message);
-    } else {
-      toast.add({
-        severity: 'success',
-        summary: 'Dados deletados com sucesso!',
-        life: 3000,
-      });
+  if(confirm('Deseja realmente excluir esta vaga?')){
+      try {
+      const { error } = await supabase
+        .from('vagas')
+        .delete()
+        .eq('id', route.params.id);
+      if (error) {
+        console.error('Erro ao deletar a vaga: ', error.message);
+      } else {
+        toast.add({
+          severity: 'success',
+          summary: 'Dados deletados com sucesso!',
+          life: 3000,
+        });
 
-      router.push('/list');
+        router.push('/list');
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
+  }
+};
+
+const disableActiveVaga = async () => {
+  if(confirm('Deseja realmente alterar o status desta vaga?')){
+    try {
+      console.log(isActive)
+      const { data, error } = await supabase
+        .from('vagas')
+        .update([
+          {
+            active: !isActive,
+          },
+        ])
+        .eq('id', route.params.id)
+        .select();
+
+      if (error) {
+        console.error('Erro ao alterar o status:', error.message);
+      } else {
+        toast.add({
+          severity: 'success',
+          summary: 'Status da vaga alterada com sucesso!',
+          life: 3000,
+        });
+      }
+
+    } catch (error) {
+      console.error('Erro ao enviar o formulário:', error);
+    }finally{
+      location.reload();
+    }
   }
 };
 

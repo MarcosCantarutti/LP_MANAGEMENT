@@ -19,6 +19,7 @@
       :more_information="vaga.more_information"
       :benefits="vaga.benefits"
       :modality="vaga.modality"
+      :active="vaga.active"
     />
   </div>
   <div class="pagination flex gap-5 justify-center items-center mt-5">
