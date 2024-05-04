@@ -1,46 +1,57 @@
 <template>
-  <div v-if="loading" class="flex itens-center mt-5">
-    <ProgressSpinner />
-  </div>
-
-  <div v-else class="grid gap-3">
-    <Card
-      class="cursor-pointer"
-      v-for="vaga in listData"
-      @click="editVaga(vaga.id)"
-      :key="vaga.id"
-      :created_at="vaga.created_at"
-      :city="vaga.city"
-      :company="vaga.company"
-      :title="vaga.title"
-      :contract_type="vaga.contract_type"
-      :responsibilities="vaga.responsibilities"
-      :requiriments="vaga.requiriments"
-      :more_information="vaga.more_information"
-      :benefits="vaga.benefits"
-      :modality="vaga.modality"
-      :active="vaga.active"
+  <div>
+    <input
+      v-model="searchTerm"
+      placeholder="Filtrar por título"
+      class="font-sans leading-none m-0 p-3 rounded-md text-surface-600 dark:text-surface-200 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-900 border border-surface-300 dark:border-surface-600 hover:border-primary-500 dark:hover:border-primary-400 focus:outline-none focus:outline-offset-0 focus:ring focus:ring-primary-500/50 dark:focus:ring-primary-400/50 focus:z-10 appearance-none transition-colors duration-200 w-full mt-5"
     />
-  </div>
-  <div class="pagination flex gap-5 justify-center items-center mt-5">
-    <button
-      @click="previousPage"
-      :disabled="currentPage === 1"
-      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-l cursor-pointer hover:bg-gray-300"
-    >
-      Anterior
-    </button>
-    <span class="px-4 py-2 text-gray-700"> Página {{ currentPage }} </span>
-    <button
-      @click="nextPage"
-      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-r cursor-pointer hover:bg-gray-300"
-    >
-      Próxima
-    </button>
+
+    <div v-if="loading" class="flex items-center mt-5">
+      <ProgressSpinner />
+    </div>
+
+    <div v-else class="grid gap-3">
+      <Card
+        v-for="vaga in filteredList"
+        :key="vaga.id"
+        :created_at="vaga.created_at"
+        :city="vaga.city"
+        :company="vaga.company"
+        :title="vaga.title"
+        :contract_type="vaga.contract_type"
+        :responsibilities="vaga.responsibilities"
+        :requiriments="vaga.requiriments"
+        :more_information="vaga.more_information"
+        :benefits="vaga.benefits"
+        :modality="vaga.modality"
+        :active="vaga.active"
+        @click="editVaga(vaga.id)"
+        class="cursor-pointer"
+      />
+    </div>
+
+    <div class="pagination flex gap-5 justify-center items-center mt-5">
+      <button
+        @click="previousPage"
+        :disabled="currentPage === 1"
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-l cursor-pointer hover:bg-gray-300"
+      >
+        Anterior
+      </button>
+      <span class="px-4 py-2 text-gray-700"> Página {{ currentPage }} </span>
+      <button
+        @click="nextPage"
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-r cursor-pointer hover:bg-gray-300"
+      >
+        Próxima
+      </button>
+    </div>
   </div>
 </template>
+
 <script setup>
 import { createClient } from '@supabase/supabase-js';
+import { ref, computed, onMounted } from 'vue';
 import Card from '@/modules/List/components/Card/Card.vue';
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -55,6 +66,7 @@ const itemsPerPage = 10; // Número de itens por página
 
 const listData = ref([]);
 let loading = ref(false);
+const searchTerm = ref('');
 
 const editVaga = (id) => {
   console.log(id);
@@ -80,6 +92,7 @@ const fetchVagas = async () => {
     const { data: vagas, error } = await supabase
       .from('vagas')
       .select('*')
+      .ilike('title', `%${searchTerm.value}%`) // Filtrar por título
       .range(offset, offset + itemsPerPage - 1);
 
     if (error) {
@@ -93,6 +106,12 @@ const fetchVagas = async () => {
     loading.value = false;
   }
 };
+
+const filteredList = computed(() => {
+  return listData.value.filter((vaga) => {
+    return vaga.title.toLowerCase().includes(searchTerm.value.toLowerCase());
+  });
+});
 
 onMounted(() => {
   fetchVagas();
