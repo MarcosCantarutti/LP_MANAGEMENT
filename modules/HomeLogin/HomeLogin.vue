@@ -1,25 +1,15 @@
 <script setup lang="ts">
-const client = useSupabaseClient();
-const router = useRouter();
-
+import { login } from '~/composables/useService/useService';
 const email = ref('');
 const password = ref('');
 const errorMsg = ref('');
+const router = useRouter();
 
-async function signIn() {
-  // Aqui você pode adicionar a lógica de autenticação
+async function handleSignIn() {
+  const loginRoute = await login();
 
-  try {
-    const { error } = await client.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
-    });
-
-    if (error) throw error;
-
-    router.push('/profile');
-  } catch (error) {
-    errorMsg.value = error.message;
+  if (loginRoute) {
+    router.push(loginRoute);
   }
 }
 </script>
@@ -34,7 +24,7 @@ async function signIn() {
           Faça login na sua conta
         </h2>
       </div>
-      <form class="mt-8 space-y-6" @submit.prevent="signIn">
+      <form class="mt-8 space-y-6" @submit.prevent="handleSignIn">
         <input type="hidden" name="remember" value="true" />
         <div class="rounded-md shadow-sm -space-y-px">
           <div class="bg-gray-500">

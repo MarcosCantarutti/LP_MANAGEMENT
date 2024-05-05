@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-import HomeLogin from '~/modules/HomeLogin/HomeLogin.vue';
 const router = useRouter();
 
 const handleLogin = () => {

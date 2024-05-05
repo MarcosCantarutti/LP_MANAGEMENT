@@ -129,7 +129,8 @@
 </template>
 
 <script setup>
-import { createClient } from '@supabase/supabase-js';
+import { createVacancy } from '~/composables/useService/useService'; // Importe o serviço
+
 let loading = ref(false);
 const formData = ref({
   city: '',
@@ -144,13 +145,7 @@ const formData = ref({
 });
 
 const router = useRouter();
-const runtimeConfig = useRuntimeConfig();
 const toast = useToast();
-
-const supabase = createClient(
-  runtimeConfig.public.supabaseUrl,
-  runtimeConfig.public.supabaseKey
-);
 
 const handleBack = () => {
   router.push('/profile');
@@ -159,22 +154,7 @@ const handleBack = () => {
 const submitForm = async () => {
   try {
     loading.value = true;
-    const { data, error } = await supabase
-      .from('vagas')
-      .insert([
-        {
-          city: formData.value.city,
-          company: formData.value.company,
-          title: formData.value.title,
-          contract_type: formData.value.contract_type,
-          responsibilities: formData.value.responsibilities,
-          requiriments: formData.value.requiriments,
-          more_information: formData.value.more_information,
-          benefits: formData.value.benefits,
-          modality: formData.value.modality,
-        },
-      ])
-      .select();
+    const { data, error } = await createVacancy(formData.value); // Use o serviço aqui
 
     if (error) {
       console.error('Erro ao enviar o formulário:', error.message);

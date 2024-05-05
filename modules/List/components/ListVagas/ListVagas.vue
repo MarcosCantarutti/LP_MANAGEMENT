@@ -50,17 +50,10 @@
 </template>
 
 <script setup>
-import { createClient } from '@supabase/supabase-js';
-import { ref, computed, onMounted } from 'vue';
 import Card from '@/modules/List/components/Card/Card.vue';
+import { fetchVacancy } from '~/composables/useService/useService'; // Importe o serviço
+
 const router = useRouter();
-const runtimeConfig = useRuntimeConfig();
-
-const supabase = createClient(
-  runtimeConfig.public.supabaseUrl,
-  runtimeConfig.public.supabaseKey
-);
-
 const currentPage = ref(1);
 const itemsPerPage = 10; // Número de itens por página
 
@@ -86,25 +79,20 @@ const nextPage = () => {
 };
 
 const fetchVagas = async () => {
-  try {
-    loading.value = true;
-    const offset = (currentPage.value - 1) * itemsPerPage;
-    const { data: vagas, error } = await supabase
-      .from('vagas')
-      .select('*')
-      .ilike('title', `%${searchTerm.value}%`) // Filtrar por título
-      .range(offset, offset + itemsPerPage - 1);
+  loading.value = true;
+  const { data, error } = await fetchVacancy(
+    currentPage.value,
+    searchTerm.value,
+    itemsPerPage
+  );
 
-    if (error) {
-      console.error('Erro ao carregar listagem', error.message);
-    } else {
-      listData.value = vagas;
-    }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loading.value = false;
+  if (error) {
+    console.error('Erro ao carregar listagem', error.message);
+  } else {
+    listData.value = data;
   }
+
+  loading.value = false;
 };
 
 const filteredList = computed(() => {

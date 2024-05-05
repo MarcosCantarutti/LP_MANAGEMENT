@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     'nuxt-primevue',
   ],
+
+  imports: {
+    dirs: ['./composables/useService'],
+  },
+
   supabase: {
     redirect: false
   },

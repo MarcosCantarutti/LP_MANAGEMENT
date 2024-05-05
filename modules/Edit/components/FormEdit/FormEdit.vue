@@ -157,7 +157,7 @@
 </template>
 
 <script setup>
-import { createClient } from '@supabase/supabase-js';
+import { fetchVacancyById, updateVacancy, deleteVacancy, toggleVacancyStatus } from '~/composables/useService/useService'; // Importe o serviço
 
 const formData = ref({
   created_at: '',
@@ -173,26 +173,17 @@ const formData = ref({
 });
 
 let isActive = ref(false);
-
 let loading = ref(false);
 
 const router = useRouter();
 const route = useRoute();
-const runtimeConfig = useRuntimeConfig();
 const toast = useToast();
 
-const supabase = createClient(
-  runtimeConfig.public.supabaseUrl,
-  runtimeConfig.public.supabaseKey
-);
 
-const fetchVagasById = async (id) => {
+const fetchVagasById = async () => {
   try {
     loading.value = true;
-    const { data, error } = await supabase
-      .from('vagas')
-      .select('*')
-      .eq('id', id);
+    const { data, error } = await fetchVacancyById(route.params.id);
 
     if (error) {
       console.error('Erro ao carregar os dados do formulário: ', error.message);
@@ -209,10 +200,10 @@ const fetchVagasById = async (id) => {
       formData.value.benefits = data[0].benefits;
       formData.value.modality = data[0].modality;
       formData.value.created_at = data[0].created_at;
-      isActive = data[0].active;
+      isActive.value = data[0].active;
     }
   } catch (error) {
-    console.error('Erro ao enviar o formulário:', error);
+    console.error('Erro ao carregar os dados do formulário:', error);
   } finally {
     loading.value = false;
   }
@@ -220,23 +211,7 @@ const fetchVagasById = async (id) => {
 
 const saveForm = async () => {
   try {
-    const { data, error } = await supabase
-      .from('vagas')
-      .update([
-        {
-          city: formData.value.city,
-          company: formData.value.company,
-          title: formData.value.title,
-          contract_type: formData.value.contract_type,
-          responsibilities: formData.value.responsibilities,
-          requiriments: formData.value.requiriments,
-          more_information: formData.value.more_information,
-          benefits: formData.value.benefits,
-          modality: formData.value.modality,
-        },
-      ])
-      .eq('id', route.params.id)
-      .select();
+    const { error } = await updateVacancy(formData.value, route.params.id);
 
     if (error) {
       console.error('Erro ao salvar o formulário:', error.message);
@@ -248,17 +223,14 @@ const saveForm = async () => {
       });
     }
   } catch (error) {
-    console.error('Erro ao enviar o formulário:', error);
+    console.error('Erro ao salvar o formulário:', error);
   }
 };
 
 const deleteVaga = async () => {
-  if(confirm('Deseja realmente excluir esta vaga?')){
-      try {
-      const { error } = await supabase
-        .from('vagas')
-        .delete()
-        .eq('id', route.params.id);
+  if (confirm('Deseja realmente excluir esta vaga?')) {
+    try {
+      const { error } = await deleteVacancy(route.params.id);
       if (error) {
         console.error('Erro ao deletar a vaga: ', error.message);
       } else {
@@ -277,19 +249,9 @@ const deleteVaga = async () => {
 };
 
 const disableActiveVaga = async () => {
-  if(confirm('Deseja realmente alterar o status desta vaga?')){
+  if (confirm('Deseja realmente alterar o status desta vaga?')) {
     try {
-      console.log(isActive)
-      const { data, error } = await supabase
-        .from('vagas')
-        .update([
-          {
-            active: !isActive,
-          },
-        ])
-        .eq('id', route.params.id)
-        .select();
-
+      const { data , error } = await toggleVacancyStatus(route.params.id, isActive.value);
       if (error) {
         console.error('Erro ao alterar o status:', error.message);
       } else {
@@ -298,15 +260,17 @@ const disableActiveVaga = async () => {
           summary: 'Status da vaga alterada com sucesso!',
           life: 3000,
         });
+        isActive.value = data[0].active;
       }
-
     } catch (error) {
-      console.error('Erro ao enviar o formulário:', error);
+      console.error('Erro ao alterar o status:', error);
     }finally{
+      
       location.reload();
     }
   }
 };
+
 
 onMounted(() => {
   fetchVagasById(route.params.id);

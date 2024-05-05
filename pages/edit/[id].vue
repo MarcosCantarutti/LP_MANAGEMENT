@@ -1,18 +1,15 @@
 <script setup>
 import Edit from '@/modules/Edit/Edit.vue';
+import { logout } from '@/composables/useService/useService';
 const user = useSupabaseUser();
-const client = useSupabaseClient();
+const email = ref('');
 const router = useRouter();
 
-const email = ref('');
+async function handleLogout() {
+  const logoutRoute = await logout();
 
-async function logout() {
-  try {
-    const { error } = await client.auth.signOut();
-    if (error) throw error;
-    router.push('/login');
-  } catch (error) {
-    console.log(error.message);
+  if (logoutRoute) {
+    router.push(logoutRoute);
   }
 }
 
@@ -29,5 +26,5 @@ watchEffect(() => {
 </script>
 
 <template>
-  <Edit :email="email" @logout="logout" />
+  <Edit :email="email" @logout="handleLogout" />
 </template>

@@ -1,8 +1,8 @@
 import { useSession } from '@/modules/auth/useSession/useSession';
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware((to, from) => {
   const session = useSession();
-  const isLogged = await session.isLogged();
+  const isLogged = session.isLogged();
 
   if (!isLogged) {
     console.log('* User not authenticated');
