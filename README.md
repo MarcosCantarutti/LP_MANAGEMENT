@@ -1,75 +1,13 @@
-# Nuxt 3 Minimal Starter
+## Setup para rodar o projeto
+# Instalar pacotes
+- npm install
+# Rodar o projeto
+- npm run dev
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Telas das rotinas
 
-## Setup
+![tela1](https://github.com/MarcosCantarutti/LP_MANAGEMENT/assets/62340631/355a5442-8bc9-40fa-9354-773d2b8df333)
+![tela2](https://github.com/MarcosCantarutti/LP_MANAGEMENT/assets/62340631/f55a07d7-e257-457d-a86b-ff86cc29bd49)
+![tela3](https://github.com/MarcosCantarutti/LP_MANAGEMENT/assets/62340631/4713e992-5101-448c-a52f-af76cd587dbf)
+![tela4](https://github.com/MarcosCantarutti/LP_MANAGEMENT/assets/62340631/66d14aee-3906-4656-b57d-e6db57e169b6)
 
-Make sure to install the dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
